@@ -3,3 +3,24 @@
     width: 400px;
     margin: 15px auto;
 }
+
+.brussel{
+    background-color: red;
+    color: white;
+}
+
+.gent{
+    background-color: greenyellow;
+}
+
+.antwerpen{
+    background-color: aquamarine;
+}
+
+.other{
+    background-color: #61dafb;
+}
+.user{
+    background-color: darkslategrey;
+    color: white;
+}

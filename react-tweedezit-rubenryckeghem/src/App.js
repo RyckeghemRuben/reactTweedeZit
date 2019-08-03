@@ -1,25 +1,39 @@
 import React, { Component } from 'react';
 import AddressForm from './AddressForm/AddressForm';
 import AddressCard from './AddressCard/AddressCard';
-
+import SpellCard from './SpellCard/SpellCard';
+import axios from 'axios';
 import './App.css';
 
 class App extends Component{
+
   state = {
       list: [
-          {name:'Ruben', city:'Likert'},
-          {name:'Jergo', city:'Oilsjt'},
-          {name:'Ruud', city:'Antwerpen'}
+          {name:'Ruben', city:'Brugge', zip: 3564},
+          {name:'Jergo', city:'Brussel', zip: 1001},
+          {name:'Ruud', city:'Gent',zip: 9800 },
+          {name:'Berry', city:'Antwerpen',zip: 2020 },
+          {name:'Flurk', city:'Antwerpen',zip: 2020 },
       ],
       form: {
           name:'',
           city:''
       },
 
-      title:'Personal Address'
+      title:'Personal Address',
+
+      spells: []
 
 
   };
+    componentDidMount() {
+            //Get request using Axios package
+               axios.get('http://www.dnd5eapi.co/api/spells')
+            .then(response => { //Promise executed when data is sent back
+                //Set the data in the state
+                this.setState({spells: response.data.results});
+            });
+    }
 
   changeAdrTypeHandler = (type) =>{
           this.setState({
@@ -51,6 +65,21 @@ class App extends Component{
 
   render(){
 
+      let adrs = this.state.list.map(address => {
+        return(
+          <AddressCard
+          name = {address.name}
+          city = {address.city}
+          zip = {address.zip}
+
+          />
+        );
+      });
+
+      const spells = this.state.spells.map((spell) => {
+          return <SpellCard name = {spell.name} />
+      });
+
       return (
           <div className="App">
             <h1>Welcome</h1>
@@ -65,24 +94,15 @@ class App extends Component{
               <AddressForm
                   name={this.state.form.name}
                   city = {this.state.form.city}
+
                   change = {this.changeInputHandler}
                   submit = {this.submitHandler}>
                   {this.state.title}
               </AddressForm>
+              {adrs}
 
+              {spells}
 
-            <AddressCard
-                name = {this.state.list[0].name}
-                city = {this.state.list[0].city}
-            />
-              <AddressCard
-                  name = {this.state.list[1].name}
-                  city = {this.state.list[1].city}
-              />
-              <AddressCard
-                  name = {this.state.list[2].name}
-                  city = {this.state.list[2].city}
-              />
           </div>
       );
   }
