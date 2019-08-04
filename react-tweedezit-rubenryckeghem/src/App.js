@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import AddressForm from './AddressForm/AddressForm';
-import AddressCard from './AddressCard/AddressCard';
+
 import SpellCard from './SpellCard/SpellCard';
 import SpellForm from './SpellForm/SpellForm';
 
 import axios from 'axios';
 import './App.css';
+
+function searchingFor(term) {
+    return function (x) {
+        return x.name.toLowerCase().includes(term.toLowerCase()) || !term;
+    }
+}
 
 class App extends Component{
     constructor(props) {
@@ -17,10 +22,12 @@ class App extends Component{
             title: 'List of Spells',
 
             spellsName: [],
-            spellsDesc:[],
-            spellsLevel:[]
+            spells:[],
+            term: ''
 
         };
+
+       this.searchHandler = this.searchHandler.bind(this);
     }
     componentDidMount() {
         var allespreuken = [];
@@ -39,7 +46,7 @@ class App extends Component{
 
                 }
 
-                this.setState({spellsDesc:allespreuken});
+                this.setState({spells:allespreuken});
 
 
     }
@@ -50,6 +57,11 @@ class App extends Component{
           });
 
   };
+
+    searchHandler = event=>{
+        this.setState({term: event.target.value});
+    }
+
   changeInputHandler = (event) =>{
           let newForm = Object.assign({},this.state.form);
           newForm[event.target.name] = event.target.value;
@@ -76,20 +88,21 @@ class App extends Component{
   }
 
   render(){
-      let spllsName = this.state.spellsName.map((spellName) => {
+
+/*      let spllsName = this.state.spellsName.map((spellName) => {
           return <SpellCard
           name = {spellName.name}
           />
-  });
+  });*/
 
 
       var arr = [];
 
-      for (var spell in this.state.spellsDesc) {
-          arr.push(this.state.spellsDesc[spell]);
+      for (var spell in this.state.spells) {
+          arr.push(this.state.spells[spell]);
       }
 
-      let spells = arr.map((spell) => {
+      let spells = arr.filter(searchingFor(this.state.term)).map((spell) => {
           return <SpellCard
               name = {spell.name}
               level = {spell.level}
@@ -107,11 +120,17 @@ class App extends Component{
       return (
           <div className="App">
              <h1>{this.state.title}</h1>
-              <SpellForm>
-                  spellName = {this.state.spellform.spellName}
-                  change = {this.changeInputHandler}
+{          <SpellForm>
+                  change = {this.searchHandler}
+                  value = {this.state.term}
                   submit = {this.addToLocalStorage}
-              </SpellForm>
+              </SpellForm>}
+
+              <form>
+                  <label>search</label>
+                  <input type= "text" value={this.state.term} onChange={event => this.searchHandler(event)}/>
+              </form>
+
               {spells}
           </div>
       );
