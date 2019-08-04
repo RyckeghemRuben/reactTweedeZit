@@ -23,7 +23,7 @@ const addressCard = (props) => {
 
     return(
         <div className={classes.join(' ')}>
-        <h3>Address of {props.name}</h3>
+        <h3>Address of {props.spellName}</h3>
             <p>Student at ehb</p>
             <p>Lives in {props.city}</p>
         </div>
