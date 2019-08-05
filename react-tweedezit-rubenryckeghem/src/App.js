@@ -81,6 +81,9 @@ class App extends Component{
 
   }
 
+  deleteUser = (index, event) =>{
+
+  }
 
 
   render(){
@@ -107,6 +110,9 @@ class App extends Component{
           return <SpellBookCard key = {retrievedSpell.index}
                 name = {retrievedSpell.name}
                 desc = {retrievedSpell.desc}
+                range = {retrievedSpell.range}
+                duration ={retrievedSpell.duration}
+                concentration = {retrievedSpell.concentration}
               />
 
 
