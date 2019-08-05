@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import SpellCard from './SpellCard/SpellCard';
 import SpellForm from './SpellForm/SpellForm';
 import SpellBookCard from './SpellBookCard/SpellBookCard';
-
+import UniqueId from 'react-html-id';
 
 import axios from 'axios';
 import './App.css';
@@ -17,6 +17,7 @@ function searchingFor(term) {
 class App extends Component{
     constructor(props) {
         super(props);
+        UniqueId.enableUniqueIds(this);
        this.state = {
             spellform: {
                 spellName: '',
@@ -66,6 +67,7 @@ class App extends Component{
       })
 
 
+
       localStorage.setItem('Spell', JSON.stringify(spell));
       console.log(spell);
       console.log(index);
@@ -76,12 +78,20 @@ class App extends Component{
 
   retrieveFromLocalStorage(){
         var retrievedSpell = localStorage.getItem('Spell');
-        console.log('Spell: ', retrievedSpell);
-        this.state.retrievedSpells.push(JSON.parse(retrievedSpell));
+        var retrievedSpelArray = Object.assign([], this.state.retrievedSpells);
+        retrievedSpelArray.push(JSON.parse(retrievedSpell));
+        this.setState({retrievedSpells:retrievedSpelArray});
+        //this.state.retrievedSpells.push(JSON.parse(retrievedSpell));
+        console.log(this.state.retrievedSpells);
 
   }
 
-  deleteUser = (index, event) =>{
+  deleteSpell = (index) =>{
+        const copyRetrievedSpells = Object.assign([],this.state.retrievedSpells);
+        copyRetrievedSpells.splice(index,1);
+        this.setState({retrievedSpells : copyRetrievedSpells});
+        localStorage.removeItem('Spell');
+        console.log(this.state.retrievedSpells);
 
   }
 
@@ -106,13 +116,15 @@ class App extends Component{
 
 
       });
-      let retrievedSpells = this.state.retrievedSpells.map((retrievedSpell) => {
+
+      let retrievedSpells = this.state.retrievedSpells.map((retrievedSpell, index) => {
           return <SpellBookCard key = {retrievedSpell.index}
                 name = {retrievedSpell.name}
                 desc = {retrievedSpell.desc}
                 range = {retrievedSpell.range}
                 duration ={retrievedSpell.duration}
                 concentration = {retrievedSpell.concentration}
+                deleteSpell = {this.deleteSpell.bind(this,index)}
               />
 
 
@@ -121,7 +133,6 @@ class App extends Component{
 
       return (
           <div className="App">
-
               <h1>{this.state.titleBook}</h1>
               {retrievedSpells}
              <h1>{this.state.title}</h1>
