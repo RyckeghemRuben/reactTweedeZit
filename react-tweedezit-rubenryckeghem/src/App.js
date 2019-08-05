@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import AddressForm from './AddressForm/AddressForm';
-import AddressCard from './AddressCard/AddressCard';
+
 import SpellCard from './SpellCard/SpellCard';
 import SpellForm from './SpellForm/SpellForm';
+import SpellBookCard from './SpellBookCard/SpellBookCard';
+
 
 import axios from 'axios';
 import './App.css';
+
+function searchingFor(term) {
+    return function (x) {
+        return x.name.toLowerCase().includes(term.toLowerCase()) || !term;
+    }
+}
 
 class App extends Component{
     constructor(props) {
@@ -15,20 +22,23 @@ class App extends Component{
                 spellName: '',
             },
             title: 'List of Spells',
+            titleBook: 'Spellbook',
+            spelssName: [],
+            spells:[],
+            term: '',
 
-            spellsName: [],
-            spellsDesc:[],
-            spellsLevel:[]
+           retrievedSpells:[]
 
         };
+
+       this.searchHandler = this.searchHandler.bind(this);
+       this.addToLocalStorage = this.addToLocalStorage.bind(this);
     }
     componentDidMount() {
         var allespreuken = [];
-            //Get request using Axios package
                 for(var i = 1; i < 320; i++) {
                     axios.get('http://www.dnd5eapi.co/api/spells')
-                        .then(response => { //Promise executed when data is sent back
-                            //Set the data in the state
+                        .then(response => {
                             this.setState({spellsName: response.data.results});
                         });
                     axios.get('http://www.dnd5eapi.co/api/spells/'+i)
@@ -39,79 +49,83 @@ class App extends Component{
 
                 }
 
-                this.setState({spellsDesc:allespreuken});
-
-
+                this.setState({spells:allespreuken});
     }
 
-  changeAdrTypeHandler = (type) =>{
-          this.setState({
-              title: type
-          });
 
-  };
-  changeInputHandler = (event) =>{
-          let newForm = Object.assign({},this.state.form);
-          newForm[event.target.name] = event.target.value;
-          this.setState({
-          form: newForm
-      });
-    };
+    searchHandler = event=>{
+        this.setState({term: event.target.value});
+    }
 
-  addToLocalStorage = (event) =>{
+  addToLocalStorage = (index, event) =>{
       event.preventDefault();
+
+      var spellsArray = this.state.spells;
+      var spell = spellsArray.find(function (element) {
+          return element.index === index;
+      })
+
+
+      localStorage.setItem('Spell', JSON.stringify(spell));
+      console.log(spell);
+      console.log(index);
+
+      this.retrieveFromLocalStorage();
   }
 
-  submitHandler = (event) =>{
-    event.preventDefault();
-    let newState = Object.assign({},this.state);
-    newState.list[0].name = newState.form.name;
-    newState.list[0].city = newState.form.city;
 
-    newState.form.name ='';
-    newState.form.city ='';
-
-    this.setState(newState);
+  retrieveFromLocalStorage(){
+        var retrievedSpell = localStorage.getItem('Spell');
+        console.log('Spell: ', retrievedSpell);
+        this.state.retrievedSpells.push(JSON.parse(retrievedSpell));
 
   }
+
+
 
   render(){
-      let spllsName = this.state.spellsName.map((spellName) => {
-          return <SpellCard
-          name = {spellName.name}
-          />
-  });
 
 
       var arr = [];
 
-      for (var spell in this.state.spellsDesc) {
-          arr.push(this.state.spellsDesc[spell]);
+      for (var spell in this.state.spells) {
+          arr.push(this.state.spells[spell]);
       }
 
-      let spells = arr.map((spell) => {
-          return <SpellCard
+      let spells = arr.filter(searchingFor(this.state.term)).map((spell) => {
+          return <SpellCard key = {spell.index}
+              id = {spell.index}
               name = {spell.name}
               level = {spell.level}
+              index = {spell.index}
+              click = {this.addToLocalStorage.bind(this,spell.index)}
           />
+
+
       });
+      let retrievedSpells = this.state.retrievedSpells.map((retrievedSpell) => {
+          return <SpellBookCard key = {retrievedSpell.index}
+                name = {retrievedSpell.name}
+                desc = {retrievedSpell.desc}
+              />
 
 
+      })  ;
 
-      /*
-      Object.keys(myObject).map((key, index) => {
-          const myItem = myObject[key]
-          return <MyComponent myItem={myItem} key={index} />
-      })*/
 
       return (
           <div className="App">
+
+              <h1>{this.state.titleBook}</h1>
+              {retrievedSpells}
              <h1>{this.state.title}</h1>
-              <SpellForm>
-                  spellName = {this.state.spellform.spellName}
-                  change = {this.changeInputHandler}
-                  submit = {this.addToLocalStorage}
-              </SpellForm>
+
+
+              <SpellForm
+                  change = {this.searchHandler}
+                  value = {this.state.term}
+              />
+
               {spells}
           </div>
       );
