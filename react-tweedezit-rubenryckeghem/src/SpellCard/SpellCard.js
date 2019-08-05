@@ -7,7 +7,7 @@ const spellCard = (props) => {
         <div className="card" key={props.id}>
             Dit is spreuk: {props.name}<br/>
             Level: {props.level}<br/>
-            <button type="submit" value = {props.index} onClick={props.click}> add to book </button>
+            <button type="submit" key={props.id} value = {props.index} onClick={props.click}> add to book </button>
         </div>
     );
 }
