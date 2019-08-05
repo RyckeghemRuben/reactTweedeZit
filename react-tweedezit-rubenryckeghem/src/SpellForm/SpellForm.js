@@ -6,9 +6,8 @@ const spellForm = (props) => {
         <div>
             <form onSubmit={props.submit}>
                 <p>
-                    <label>Name</label>
-                    <input type="text" value={props.value} onChange={props.change}/>
-                    <button type="submit">testknop</button>
+                    <label>Name of spell</label>
+                    <input type="text" className="search-input" value={props.value} onChange={props.change}/>
                 </p>
             </form>
         </div>
