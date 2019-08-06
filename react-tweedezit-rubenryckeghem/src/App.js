@@ -10,8 +10,7 @@ import plusKnop from './plusKnop.png';
 import axios from 'axios';
 import './App.css';
 
-//search via tutorial youtube
-//button laten veranderen, gebaseerd op deze stackoverflow: https://stackoverflow.com/questions/48615887/how-can-i-change-the-fontweight-of-an-item-at-click-method-react
+//search en delete via tutorial youtube
 
 function searchingFor(term) {
     return function (x) {
@@ -150,7 +149,7 @@ class App extends Component{
 
       });
 
-      let retrievedSpells = this.state.retrievedSpells.map((retrievedSpell, index, item) => {
+      let retrievedSpells = this.state.retrievedSpells.map((retrievedSpell, index) => {
           return <SpellBookCard key = {retrievedSpell.index}
                 name = {retrievedSpell.name}
                 desc = {retrievedSpell.desc}
@@ -159,7 +158,7 @@ class App extends Component{
                 duration ={retrievedSpell.duration}
                 image = {thrash}
                 concentration = {retrievedSpell.concentration}
-                deleteSpell = {this.deleteSpell.bind(this,index, item)}
+                deleteSpell = {this.deleteSpell.bind(this,index)}
 
               />
 
