@@ -4,9 +4,13 @@ import SpellCard from './SpellCard/SpellCard';
 import SpellForm from './SpellForm/SpellForm';
 import SpellBookCard from './SpellBookCard/SpellBookCard';
 import UniqueId from 'react-html-id';
-
+import thrash from './thrash.jpg';
+import vinkje from './vinkje.png';
+import plusKnop from './plusKnop.png';
 import axios from 'axios';
 import './App.css';
+
+//search via tutorial youtube
 
 function searchingFor(term) {
     return function (x) {
@@ -14,21 +18,23 @@ function searchingFor(term) {
     }
 }
 
+
 class App extends Component{
     constructor(props) {
+
         super(props);
         UniqueId.enableUniqueIds(this);
        this.state = {
             spellform: {
                 spellName: '',
             },
-            title: 'List of Spells',
-            titleBook: 'Spellbook',
+            title: 'LIST OF SPELLS',
+            titleBook: 'SPELLBOOK',
             spelssName: [],
             spells:[],
             term: '',
-
-           retrievedSpells:[]
+            retrievedSpells:[],
+            selected: null
 
         };
 
@@ -58,15 +64,15 @@ class App extends Component{
         this.setState({term: event.target.value});
     }
 
-  addToLocalStorage = (index, event) =>{
+  addToLocalStorage = (index,item,event ) =>{
       event.preventDefault();
-
       var spellsArray = this.state.spells;
       var spell = spellsArray.find(function (element) {
           return element.index === index;
       })
-
-
+      this.setState({
+          selected: item
+      })
 
       localStorage.setItem('Spell', JSON.stringify(spell));
       console.log(spell);
@@ -86,18 +92,22 @@ class App extends Component{
 
   }
 
-  deleteSpell = (index) =>{
+  deleteSpell = (index, item) =>{
+
         const copyRetrievedSpells = Object.assign([],this.state.retrievedSpells);
         copyRetrievedSpells.splice(index,1);
         this.setState({retrievedSpells : copyRetrievedSpells});
         localStorage.removeItem('Spell');
+      this.setState({
+          selected: !item
+      })
         console.log(this.state.retrievedSpells);
 
   }
 
 
-  render(){
 
+  render(){
 
       var arr = [];
 
@@ -105,26 +115,32 @@ class App extends Component{
           arr.push(this.state.spells[spell]);
       }
 
-      let spells = arr.filter(searchingFor(this.state.term)).map((spell) => {
+
+      let spells = arr.filter(searchingFor(this.state.term)).map((spell, item) => {
+
           return <SpellCard key = {spell.index}
               id = {spell.index}
               name = {spell.name}
               level = {spell.level}
               index = {spell.index}
-              click = {this.addToLocalStorage.bind(this,spell.index)}
+              click = {this.addToLocalStorage.bind(this,spell.index, item)}
+              imageKnop = {this.state.selected === item ? vinkje : plusKnop}
           />
 
 
       });
 
-      let retrievedSpells = this.state.retrievedSpells.map((retrievedSpell, index) => {
+      let retrievedSpells = this.state.retrievedSpells.map((retrievedSpell, index, item) => {
           return <SpellBookCard key = {retrievedSpell.index}
                 name = {retrievedSpell.name}
                 desc = {retrievedSpell.desc}
                 range = {retrievedSpell.range}
+                level = {retrievedSpell.level}
                 duration ={retrievedSpell.duration}
+                image = {thrash}
                 concentration = {retrievedSpell.concentration}
-                deleteSpell = {this.deleteSpell.bind(this,index)}
+                deleteSpell = {this.deleteSpell.bind(this,index, item)}
+
               />
 
 
@@ -133,17 +149,20 @@ class App extends Component{
 
       return (
           <div className="App">
-              <h1>{this.state.titleBook}</h1>
-              {retrievedSpells}
+              <div className="row">
+              <div className="col-6">
              <h1>{this.state.title}</h1>
-
-
               <SpellForm
                   change = {this.searchHandler}
                   value = {this.state.term}
               />
-
               {spells}
+              </div>
+                  <div className = "col-6">
+                      <h1>{this.state.titleBook}</h1>
+                      {retrievedSpells}
+                  </div>
+              </div>
           </div>
       );
   }
