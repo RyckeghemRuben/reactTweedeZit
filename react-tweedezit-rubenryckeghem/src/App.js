@@ -11,6 +11,7 @@ import axios from 'axios';
 import './App.css';
 
 //search via tutorial youtube
+//button laten veranderen, gebaseerd op deze stackoverflow: https://stackoverflow.com/questions/48615887/how-can-i-change-the-fontweight-of-an-item-at-click-method-react
 
 function searchingFor(term) {
     return function (x) {
@@ -74,11 +75,14 @@ class App extends Component{
           selected: item
       })
 
+
       localStorage.setItem('Spell', JSON.stringify(spell));
       console.log(spell);
       console.log(index);
 
-      this.retrieveFromLocalStorage();
+            this.retrieveFromLocalStorage();
+
+
   }
 
 
@@ -125,6 +129,8 @@ class App extends Component{
               index = {spell.index}
               click = {this.addToLocalStorage.bind(this,spell.index, item)}
               imageKnop = {this.state.selected === item ? vinkje : plusKnop}
+              enableDisable = {this.state.selected === item ? 'disabled' : 'cardButton'}
+              enableDisableDiv = {this.state.selected === item ? 'disabled' : ''}
           />
 
 

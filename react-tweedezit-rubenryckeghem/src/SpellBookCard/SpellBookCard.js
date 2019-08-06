@@ -12,7 +12,7 @@ const SpellBookCard = (props) => {
                 <p className="card-text"><b>Range: </b>{props.range}</p>
                 <p className="card-text"><b>Duration: </b>{props.duration}</p>
                 <p className="card-text"><b>Concentration: </b>{props.concentration}</p>
-                <img className="spellbookButton" src={props.image} type="submit" key={props.id} onClick={props.deleteSpell}/>
+                <img className="spellbookButton" src={props.image} type="submit" key={props.id} onClick={props.deleteSpell}   />
             </div>
         </div>
     );

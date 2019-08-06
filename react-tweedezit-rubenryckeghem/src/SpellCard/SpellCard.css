@@ -6,3 +6,16 @@
 .cardButton{
     width: 1em;
 }
+
+.disabled{
+    width: 1em;
+    cursor: not-allowed;
+    margin: auto;
+}
+.disabled img{
+    pointer-events: none;
+
+}
+.cardButton img{
+    width: 1em;
+}
