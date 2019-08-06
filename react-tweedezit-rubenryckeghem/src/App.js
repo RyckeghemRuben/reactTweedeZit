@@ -180,6 +180,7 @@ class App extends Component{
               </div>
                   <div className = "col-6">
                       <h1>{this.state.titleBook}</h1>
+                      <h4>Amount of spells:{this.state.retrievedSpells.length}</h4>
                       {retrievedSpells}
                   </div>
               </div>
