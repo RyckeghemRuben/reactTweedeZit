@@ -35,8 +35,8 @@ class App extends Component{
             spells:[],
             term: '',
             retrievedSpells:[],
-            selected: null
-
+            selected: [],
+           spellsIndex:[]
         };
 
        this.searchHandler = this.searchHandler.bind(this);
@@ -65,24 +65,27 @@ class App extends Component{
         this.setState({term: event.target.value});
     }
 
-  addToLocalStorage = (index,item,event ) =>{
-      event.preventDefault();
-      var spellsArray = this.state.spells;
-      var spell = spellsArray.find(function (element) {
-          return element.index === index;
-      })
-      this.setState({
-          selected: item
-      })
+  addToLocalStorage = (index,event ) =>{
+        if(this.state.spellsIndex.includes(index)){
+            console.log(window.alert("You've already added this spell"))
+        }else {
+            event.preventDefault();
+            var spellsArray = this.state.spells;
+            var spell = spellsArray.find(function (element) {
+                return element.index === index;
+            })
 
+            this.state.spellsIndex.push(spell.index);
+            console.log("spellindex: " + this.state.spellsIndex)
 
-      localStorage.setItem('Spell', JSON.stringify(spell));
-      console.log(spell);
-      console.log(index);
+            localStorage.setItem('Spell', JSON.stringify(spell));
+            console.log(spell);
+            console.log(index);
+
 
             this.retrieveFromLocalStorage();
 
-
+        }
   }
 
 
@@ -91,21 +94,24 @@ class App extends Component{
         var retrievedSpelArray = Object.assign([], this.state.retrievedSpells);
         retrievedSpelArray.push(JSON.parse(retrievedSpell));
         this.setState({retrievedSpells:retrievedSpelArray});
+        console.log("spellsindex = " + this.state.spellsIndex)
         //this.state.retrievedSpells.push(JSON.parse(retrievedSpell));
         console.log(this.state.retrievedSpells);
 
   }
 
-  deleteSpell = (index, item) =>{
+  deleteSpell = (index) =>{
 
         const copyRetrievedSpells = Object.assign([],this.state.retrievedSpells);
         copyRetrievedSpells.splice(index,1);
         this.setState({retrievedSpells : copyRetrievedSpells});
         localStorage.removeItem('Spell');
-      this.setState({
-          selected: !item
-      })
+        var spellsindex = Object.assign([], this.state.spellsIndex);
+        spellsindex.splice(index,1);
+        this.setState({spellsIndex:spellsindex});
         console.log(this.state.retrievedSpells);
+      console.log("spellsindex = " + this.state.spellsIndex)
+
 
   }
 
@@ -119,20 +125,28 @@ class App extends Component{
           arr.push(this.state.spells[spell]);
       }
 
+      let spells = arr.filter(searchingFor(this.state.term)).map((spell) => {
+          if(this.state.spellsIndex.includes(spell.index)) {
+              return <SpellCard key={spell.index}
+                                id={spell.index}
+                                name={spell.name}
+                                level={spell.level}
+                                index={spell.index}
+                                imageKnop={vinkje}
+                                click={this.addToLocalStorage.bind(this, spell.index)}
+              />
+          }else{
+              return <SpellCard key={spell.index}
+                                id={spell.index}
+                                name={spell.name}
+                                level={spell.level}
+                                index={spell.index}
+                                imageKnop={plusKnop}
+                                click={this.addToLocalStorage.bind(this, spell.index)}
+              />
 
-      let spells = arr.filter(searchingFor(this.state.term)).map((spell, item) => {
 
-          return <SpellCard key = {spell.index}
-              id = {spell.index}
-              name = {spell.name}
-              level = {spell.level}
-              index = {spell.index}
-              click = {this.addToLocalStorage.bind(this,spell.index, item)}
-              imageKnop = {this.state.selected === item ? vinkje : plusKnop}
-              enableDisable = {this.state.selected === item ? 'disabled' : 'cardButton'}
-              enableDisableDiv = {this.state.selected === item ? 'disabled' : ''}
-          />
-
+          }
 
       });
 
