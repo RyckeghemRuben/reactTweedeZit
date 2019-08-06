@@ -69,8 +69,9 @@ class App extends Component{
       event.preventDefault();
       var spellsArray = this.state.spells;
       var spell = spellsArray.find(function (element) {
-          return element.index === index;
+      return element.index === index;
       })
+      
       this.setState({
           selected: item
       })
@@ -80,7 +81,7 @@ class App extends Component{
       console.log(spell);
       console.log(index);
 
-            this.retrieveFromLocalStorage();
+      this.retrieveFromLocalStorage();
 
 
   }
@@ -102,9 +103,9 @@ class App extends Component{
         copyRetrievedSpells.splice(index,1);
         this.setState({retrievedSpells : copyRetrievedSpells});
         localStorage.removeItem('Spell');
-      this.setState({
-          selected: !item
-      })
+         this.setState({
+          selected: item
+        })
         console.log(this.state.retrievedSpells);
 
   }
@@ -127,10 +128,10 @@ class App extends Component{
               name = {spell.name}
               level = {spell.level}
               index = {spell.index}
-              click = {this.addToLocalStorage.bind(this,spell.index, item)}
               imageKnop = {this.state.selected === item ? vinkje : plusKnop}
               enableDisable = {this.state.selected === item ? 'disabled' : 'cardButton'}
               enableDisableDiv = {this.state.selected === item ? 'disabled' : ''}
+              click = {this.addToLocalStorage.bind(this,spell.index, item)}
           />
 
 
