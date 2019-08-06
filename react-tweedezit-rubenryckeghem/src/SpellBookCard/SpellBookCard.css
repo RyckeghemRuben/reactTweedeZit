@@ -5,3 +5,12 @@
     padding: 5px;
     text-align: left;
 }
+.spellbookButton{
+    width: 1em;
+}
+.spellbookButton:hover{
+
+    opacity: 0.5;
+    transition: 0.3s;
+    cursor: pointer;
+}

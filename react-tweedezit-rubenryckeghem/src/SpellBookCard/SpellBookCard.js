@@ -3,13 +3,17 @@ import './SpellBookCard.css';
 const SpellBookCard = (props) => {
 
     return(
-        <div className="spellbookcard" key={props.id}>
-            <b>Dit is spreuk:</b> {props.name}<br/>
-            <b>Beschrijving:</b> {props.desc}<br/>
-            <b>Range:</b> {props.range}<br/>
-            <b>Duration:</b> {props.duration}<br/>
-            <b>Concentration:</b> {props.concentration}<br/>
-            <button type="submit" key={props.id} onClick={props.deleteSpell}>delete</button>
+
+        <div className="card text-left" key={props.id}>
+            <h5 className="card-header bg-info text-light">{props.name}</h5>
+            <div className="card-body">
+                <p className="card-text"><b>Description: </b>{props.desc}</p>
+                <p className="card-text"><b>Level: </b>{props.level}</p>
+                <p className="card-text"><b>Range: </b>{props.range}</p>
+                <p className="card-text"><b>Duration: </b>{props.duration}</p>
+                <p className="card-text"><b>Concentration: </b>{props.concentration}</p>
+                <img className="spellbookButton" src={props.image} type="submit" key={props.id} onClick={props.deleteSpell}/>
+            </div>
         </div>
     );
 }

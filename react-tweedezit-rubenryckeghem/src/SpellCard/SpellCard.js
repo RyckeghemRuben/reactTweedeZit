@@ -5,10 +5,13 @@ const spellCard = (props) => {
 
     return(
         <div className="card" key={props.id}>
-            Dit is spreuk: {props.name}<br/>
-            Level: {props.level}<br/>
-            <button type="submit" key={props.id} value = {props.index} onClick={props.click}> add to book </button>
+            <h5 className="card-header">{props.name}</h5>
+            <div className="card-body">
+                <h6 className="card-title">Level:{props.level}</h6>
+                <img className="cardButton" src={props.imageKnop} type="submit" key={props.id} value = {props.index} onClick={props.click}/>
+            </div>
         </div>
     );
 }
 export default spellCard;
+
